@@ -1,0 +1,66 @@
+<style>
+	.container>div{
+		font-size: 24px;
+		height: 150px;
+	}
+	#one{
+		margin-left: 50px;
+		margin-right: 80px;
+	}
+	#two{
+		margin-right: 80px;
+	}
+	#three{
+		margin-right: 80px;
+	}
+	#four{
+		margin-right: 80px;
+	}
+	i{
+		font-size: 5em;
+	}
+	#first{
+		position: relative;
+		margin-left: 20px;
+	}
+	#second{
+		position: relative;
+		margin-left: 20px;
+	}
+	#third{
+		position: relative;
+		margin-left: 20px;
+	}
+	#forth{
+		position: relative;
+		margin-left: 20px;
+	}
+
+	.sy_content{
+		border: 1px solid #ededed;
+		width: 500px;
+		height: 400px;
+		position: relative;
+		margin-left: 50px;
+		background-color: pink;
+		background-image: url('./images/kefu.png');
+		background-size: cover;
+	}
+</style>
+
+<div class="main">
+	<div class="container">
+        <div class="row">
+            <div id="one" class="col-2">
+            <span>2233</span><br><span>简历</span><i id="first" class="fa fa-file-text fa-2x" aria-hidden="true" style="color:black"></i></div>
+            <div id="two" class="col-2"><span>4421</span><br><span>用户</span><i id="second" class="fa fa-user-o fa-2x" aria-hidden="true" style="color:pink"></i></div>
+            <div id="three" class="col-2"><span>1343</span><br><span>商家</span><i id="third" class="fa fa-steam-square fa-2x" aria-hidden="true" style="color:yellow"></i></div>
+            <div id="four" class="col-2"><span>9999</span><br><span>浏览</span><i id="forth" class="fa fa-eye fa-2x" aria-hidden="true" style="color:lightblue"></i></div>
+        </div>
+	</div>
+    <div class="sy_content">
+    </div>
+</div>
+<script>
+	$(".sycontent").load('./pages/employment.html');
+</script>

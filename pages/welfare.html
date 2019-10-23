@@ -1,0 +1,229 @@
+<style>
+	.content{
+		height: 100%;
+	}
+	thead{
+		color: #fff;
+	}
+	#one{
+		width: 80px;
+	}
+	.btn_del{
+	color: red;
+	}
+	.btn_edit{
+		color: black;
+	}
+	#dj{
+		background-color: red;
+		color:#fff;
+	}
+	#hf{
+		background-color: green;
+		color:#fff;
+	}
+	tbody tr:hover{
+	background-color: #ededed;
+}
+</style>
+<div class="content">
+	<select id="one">
+		
+	</select>
+	<div class="tb">
+		<table class="table bg-dark" >
+			<thead>
+				<td>编号</td>
+				<td>福利名称</td>
+				<td>状态</td>
+				<td>冻结/恢复</td>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+<div id="fl_modal" class="modal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">福利详情</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		 <form class="form-inline">
+                <div class="form-group">
+                    福利标题：<input type="text" class="form-control input-sm" placeholder="title" style="width:200px">
+                </div>
+                <div class="form-group">
+                	福利状态 ：<input id="fl_status" type="text" class="form-control input-sm"
+                    placeholder="contactName" style="width:200px">
+                    id:<input id="fl_id" type="text" class="form-control input-sm" style="width:200px">
+                </div>
+            </form>
+      </div>
+      <div id="buttons" class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="submitfl">保存</button>
+      </div>
+    </div>
+  </div>
+ </div>
+<script>
+	// 数据加载完成后执行
+	$(function(){
+		var baseUrl="http://203.195.246.58:7777";
+		function reload(){
+			$("tbody").empty();
+			$.get(baseUrl+"/Welfare/findAll",function(result){
+				result.data.forEach(function(item,index){
+					if(item.status=="使用中"){
+						$(`
+					<tr class="bg-light">
+						<td><input type="checkbox" value="`+item.id+`"</td>
+						<td>`+item.name+`</td>
+						<td>`+item.status+`</td>
+						<td >
+							<a class="dj" id="dj" href="javascript:void(0)">`+"冻结"+`</a></td>
+						
+					</tr>
+					`).appendTo($("tbody"));
+					}else{
+						$(`
+					<tr class="bg-light">
+						<td><input type="checkbox" value="`+item.id+`"</td>
+						<td>`+item.name+`</td>
+						<td>`+item.status+`</td>
+						<td ><a class="hf" id="hf" href="javascript:void(0)">`+"恢复"+`</a></td>
+						
+					</tr>
+					`).appendTo($("tbody"));
+					}
+					
+				})
+
+				var a=[];
+				result.data.forEach(function(item,index){
+					a.push(item.name);
+				})
+				// 查看是否获取到a数组
+				// console.log(a);
+				var newa=[];
+				//2.遍历旧数组a 中所有元素;
+				for(var i=0;i<=a.length;i++){
+				  //3.定义一个isZai变量表示开关，默认为false状态;
+				  var isZai=false;
+				  for(var j=0;j<=newa.length;j++){
+				  // 4.遍历新数组所有元素与旧数组元素比较(a[ i ] == newa[ j ]);
+				  		if(a[ i ] == newa[ j ]){
+				  		//5.如果该元素存在于新数组中，则改变开关状态为true;
+				  		isZai=true;//假设被推翻
+				  		break;//一旦重复后面没有比较必要
+				  	}
+				  }
+				  // 6.根据开关状态实现需求:如果开关为false状态，则将旧数组的元素添加到新数组中;
+				  if(isZai==false){
+				    	newa[newa.length]=a[i];
+				  	}
+				}
+				// console.log('------')
+				// 查看赛选出的name
+				console.log(newa);
+				 for(var i=0;i<newa.length;i++){
+				 	// console.log(newa[i]);
+				 	//追加到select中
+					 $(`
+					  	<option>`+newa[i]+`</option>`).appendTo($("#one"));
+				 }
+				
+			})
+		}
+		reload();
+		$("tbody").on("click","a",function(result){
+ 				switch(this.className){
+ 				// 	case "btn_del":
+ 				// 	var id=$(this).parents("tr").children().eq(0).find("input").val();
+					// var data={
+					// 	id:id
+					// }
+					// $.post(baseUrl+"/Welfare/deleteById",data,function(result){
+					// 	if(result.status==200){
+					// 		reload();
+					// 	}
+					// 	else{
+					// 		alert(result.message);
+					// 	}
+					// })
+ 				// 	break;
+ 				// 	case "btn_edit":
+ 				// 	$("#fl_modal").modal("show");
+					// $("#fl_modal").find("input")[0].value=$(this).parents("tr").children().eq(1)[0].innerHTML;
+					// $("#fl_modal").find("input")[1].value=$(this).parents("tr").children().eq(2)[0].innerHTML;
+					// console.log($(this).parents("tr").children().eq(0).find("input").val());
+					// $("#fl_modal").find("input")[2].value=$(this).parents("tr").children().eq(0).find("input").val();
+ 				// 	break;
+ 					case "dj":
+ 					console.log($(this).parents("tr").children().eq(2)[0].innerHTML);
+ 					$(this).parents("tr").children().eq(2)[0].innerHTML="冻结中";
+ 					var status=$(this).parents("tr").children().eq(2)[0].innerHTML;
+ 					var id=$(this).parents("tr").children().eq(0).find("input").val();
+ 					var name=$(this).parents("tr").children().eq(1)[0].innerHTML;
+ 					var data={
+ 						id:id,
+ 						name:name,
+ 						status:status
+ 					}
+ 					$.post(baseUrl+"/Welfare/saveOrUpdate",data,function(result){
+ 						if(result.status==200){
+ 							reload();
+ 						}else{
+ 							alert(result.message);
+ 						}
+ 					})
+ 					break;
+ 					case "hf":
+ 					// alert($(this).parents("tr").children().eq(2)[0].innerHTML);
+
+ 					$(this).parents("tr").children().eq(2)[0].innerHTML="使用中";
+ 					var status=$(this).parents("tr").children().eq(2)[0].innerHTML;
+ 					var id=$(this).parents("tr").children().eq(0).find("input").val();
+ 					var name=$(this).parents("tr").children().eq(1)[0].innerHTML;
+ 					var data={
+ 						id:id,
+ 						name:name,
+ 						status:status
+ 					}
+ 					$.post(baseUrl+"/Welfare/saveOrUpdate",data,function(result){
+ 						if(result.status==200){
+ 							reload();
+ 						}else{
+ 							alert(result.message);
+ 						}
+ 					})
+ 					break;
+ 				}
+ 			})
+		function close(){// console.log(233);
+			$("#fl_modal").modal("hide");}
+		$("#submitfl").click(function(){
+			var id=$("#fl_modal").find("input")[2].value;
+			var name=$("#fl_modal").find("input")[0].value;
+			var status=$("#fl_modal").find("input")[1].value;
+			console.log(id);
+			var data={
+				id:id,
+				name:name,
+				status:status
+			}
+			$.post(baseUrl+"/Welfare/saveOrUpdate",data,function(result){
+				if(result.status==200){
+					reload();
+				}else{
+					alert(result.message);
+				}
+			})
+			close();
+		})
+	})
+</script>

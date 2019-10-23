@@ -1,0 +1,170 @@
+<style>
+	thead{
+		color: #fff;
+	}
+	#exampleInputName0{
+		display: none;
+	}
+	#one{
+	display: inline-block;
+}
+#two{
+	display: inline-block;
+}
+#tel{
+	position: relative;
+	left:85px; 
+}
+#exampleInputName6{
+	position: relative;
+	left:85px; 
+}
+tbody tr:hover{
+	background-color: #ededed;
+}
+</style>
+<div class="main">
+	<div class="layui-tab">
+	  <ul class="layui-tab-title">
+	    <li class="layui-this">求职联系</li>
+	  </ul>
+	  <div class="layui-tab-content">
+	    <div class="layui-tab-item layui-show">
+	    	待联系：
+		<table class="table">
+			<thead class="bg-dark">
+					<td>编号</td>
+		    		<td>求职人</td>
+		    		<td>联系方式</td>
+		    		<td>申请时间</td>
+		    		<td>简历</td>
+		    		<td>求职状态</td>
+			</thead>
+		  <tbody id="tbody">
+		  </tbody>
+		</table>
+	    </div>
+	  </div>
+	</div>
+</div>
+<!-- 查看模态框 -->
+<div class="modal fade" id="myEditMd">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">求职人详情</h4>
+      </div>
+      <div class="modal-body">
+        	<form class="form-inline">
+			  <div class="form-group">
+			  	<input type="text" name='id' class="form-control" id="exampleInputName0">
+			    <label for="exampleInputName1" style="width:80px">用户名</label>
+			    <input type="text" name='username' class="form-control" id="exampleInputName1"  style="width:200px">
+			    <label for="exampleInputName2"  style="width:80px">真实姓名</label>
+			    <input type="text" name='realname' class="form-control" id="exampleInputName2"  style="width:200px">
+			  </div>
+			  <div class="form-group">
+			  <label for="exampleInputName3"  style="width:80px">密码</label>
+			    <input type="password" name='' class="form-control" id="exampleInputName3"  style="width:200px">
+			    <label for="exampleInputName4"  style="width:80px">学历</label>
+			    <input type="text" name='' class="form-control" id="exampleInputName4"  style="width:200px">
+			  </div>
+			  <div class="form-group">
+			  	<label for="exampleInputName5" style="width:80px">性别</label>
+			  	<div class="form-check form-check-inline">
+					<input id="input_gender_male" type="radio" class="form-check-input" name="gender" value="male"  style="width:10px">
+					<label for="input_gender_male" class="form-check-label"  style="width:30px">男</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input id="input_gender_female" type="radio" class="form-check-input" name="gender" value="female"  style="width:10px">
+				<label for="input_gender_female" class="form-check-label"  style="width:30px">女</label> 
+				</div>
+			    <label id="tel" for="exampleInputName6"  style="width:80px">联系方式</label>
+			    <input type="text" name='telephone' class="form-control" id="exampleInputName6" style="width:200px">
+			  </div>
+			  <div class="form-group">
+			  <label for="exampleInputName7"  style="width:80px">申请时间</label>
+			    <input type="text" name='workTime' class="form-control" id="exampleInputName7"  style="width:200px">
+			    <label for="exampleInputName8"  style="width:80px">求职状态</label>
+			    <input type="text" name='currentStatus' class="form-control" id="exampleInputName8"  style="width:200px">
+			  </div>
+			</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+	$(function(){
+		var baseUrl="http://203.195.246.58:7777";
+		var dateParse=(dataString)=>{
+		  if(dataString){
+		    let date = new Date(dataString);
+		    let Y = date.getFullYear() + '-';
+		    let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		    let D = (date.getDate()< 10 ? '0'+date.getDate() : date.getDate())+' ';
+		    let h = (date.getHours()< 10 ? '0'+date.getHours() : date.getHours())+ ':';
+		    let m = (date.getMinutes()< 10 ? '0'+date.getMinutes() : date.getMinutes())+ ':';
+		    let s = (date.getSeconds()< 10 ? '0'+date.getSeconds() : date.getSeconds());
+		    return Y+M+D+h+m+s;
+		  }else{
+		    return '';
+		  }
+		}
+		// 数据加载
+		function reload(){
+			$.get(baseUrl+"/EmploymentJobhunter/findAllWithJobhAndEmpl",function(result){
+				result.data.forEach(function(item,index){
+					var newTr=$(`
+					<tr>
+			  			<td><input type="checkbox" value="`+item.jobhunter.id+`"></td>
+			  			<td>`+item.jobhunter.realname+`</td>
+			  			<td>`+item.jobhunter.telephone+`</td>
+			  			<td>`+dateParse(item.askTime)+`</td>
+			  			<td>
+			  				<a class="btn_show" href="javascript:void(0)">查看</a>
+			  			</td>
+			  			<td>`+item.jobhunter.currentStatus+`</td>
+			  		</tr>
+					`);
+					$("#tbody").append(newTr);
+				})
+			})
+		}
+		reload();
+		// 查看显示
+		$("#tbody").on("click","a",function(event){
+			if (this.className=="btn_show") {
+				$("#myEditMd").modal("show");
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				};
+				$("#myEditMd").find("input")[8].value=$(this).parents("tr").children().eq(3)[0].innerText;
+				$.get(baseUrl+"/Jobhunter/findById",data,function(result){
+					// 传id
+					$("#myEditMd").find("input")[0].value=result.data.id;
+					// 传username
+					$("#myEditMd").find("input")[1].value=result.data.username;
+					// 传realnames
+					$("#myEditMd").find("input")[2].value=result.data.realname;
+					// 传手机号
+					$("#myEditMd").find("input")[7].value=result.data.telephone;
+					// 传性别
+					if(result.data.gender=="男"||result.data.gender=="male"){
+						$("input[id=input_gender_male]").prop("checked",true);
+					}
+					if(result.data.gender=="女"||result.data.gender=="female"){
+						$("input[id=input_gender_female]").prop("checked",true);
+					}
+					// 传学历
+					$("#myEditMd").find("input")[4].value=result.data.education;
+					$("#myEditMd").find("input")[9].value=result.data.currentStatus;
+				})
+
+			}
+		})
+	})
+</script>

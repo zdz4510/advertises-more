@@ -1,0 +1,117 @@
+<style>
+	.content{
+		height: 100%;
+		padding: 0;
+	}
+	#jobs{
+		height: 3em;
+		background-color: black;
+		font-size: 1em;
+		color: #fff;
+		line-height: 3em;
+	}
+	#job > li{
+		width: 80px;
+		display: inline-block;
+		color: #333;
+	} 
+	.add_block{
+		display: none;
+	}
+	tbody tr:hover{
+	background-color: #ededed;
+}
+</style>
+<div class="content">
+	<div>
+		<button id="add" class="btn btn-link">添加</button>
+		<div class="add_block" id="add_block" >
+			<input type="text">
+			<button id="add_job" class="btn btn-primary">添加招聘</button>
+		</div>
+	</div>
+	<!-- 招聘标题 -->
+	<div class="jp" id="jp">
+		<ul id="jobs">
+		<li>招聘</li>
+		</ul>
+	</div>
+	<!-- 职业标题 -->
+	<div class="cz">
+		<ul id="job">
+		</ul>
+	</div>	
+</div>
+<script>
+	$(function(){
+		var baseUrl="http://203.195.246.58:7777";
+		function reload(){
+			$("#job").empty();
+			$.get(baseUrl+"/Jobs/findAll",function(result){
+				var a=[];
+				result.data.forEach(function(item,index){
+					a.push(item.name);
+				})
+				// 查看是否获取到a数组
+				// console.log(a);
+				var newa=[];
+				//2.遍历旧数组a 中所有元素;
+				for(var i=0;i<=a.length;i++){
+				  //3.定义一个isZai变量表示开关，默认为false状态;
+				  var isZai=false;
+				  for(var j=0;j<=newa.length;j++){
+				  // 4.遍历新数组所有元素与旧数组元素比较(a[ i ] == newa[ j ]);
+				  		if(a[ i ] == newa[ j ]){
+				  		//5.如果该元素存在于新数组中，则改变开关状态为true;
+				  		isZai=true;//假设被推翻
+				  		break;//一旦重复后面没有比较必要
+				  	}
+				  }
+				  // 6.根据开关状态实现需求:如果开关为false状态，则将旧数组的元素添加到新数组中;
+				  if(isZai==false){
+				    	newa[newa.length]=a[i];
+				  	}
+				}
+				// console.log('------')
+				// 查看赛选出的name
+				// console.log(newa);
+				 for(var i=0;i<newa.length;i++){
+				 	// console.log(newa[i]);
+				 	//追加到select中
+					 $(`
+					  	<li>`+newa[i]+`</li>`).appendTo($("#job"));
+				 }
+			})	
+		}
+		reload();
+		$("#add").click(function(){
+			//添加按钮关闭
+			$("#add").css("display","none");
+			//弹出添加招聘的框
+			$("#add_block").css("display","inline-block");
+			// 给添加招聘的框绑定事件
+			$("#add_job").click(function(){
+				console.log("添加招聘");
+				$("#job").empty();
+				var name=$("#add_block").find("input").eq(0).val();
+				var status="招聘中";
+				var data={
+					name:name,
+					status:status
+				}
+				$.post(baseUrl+"/Jobs/saveOrUpdate",data,function(result){
+					if(result.status==200){
+						reload();
+					}
+					else{
+						alert(result.message);
+					}
+				})
+				// 隐藏添加招聘的框
+				$("#add_block").css("display","none");
+				//添加按钮显示
+				$("#add").css("display","inline-block");
+			})
+		})	
+	})
+</script>

@@ -1,0 +1,578 @@
+<style>
+	.main{
+		position: relative;
+	}
+	nav{
+		display: inline-block;
+	}
+	.btns{
+		position: absolute;
+		right: 10px;
+		top: 23px;
+	}
+	.btn_del{
+		color: red;
+	}
+	.btn_edit{
+		color: black;
+	}
+thead{
+	color: #fff;
+}
+tbody tr:hover{
+	background-color: #ededed;
+}
+
+#fbr_input{
+	position: relative;
+	left: 10px;
+}
+#zhiwei{
+	display: inline-block;
+	position: relative;
+	left: 38px;
+}
+#zwxq{
+	display: inline-block;
+	position: relative;
+	right: 450px;
+	bottom: -38px;
+}
+#buttons{
+	position: relative;
+	border: 0;
+}
+h4{
+	position: relative;
+	left: 325px;
+	top: -10px;
+	color: red;
+	font-weight: bold;
+}
+.p1{
+	font-size: 12px;
+	position: relative;
+	top: -20px;
+}
+.p2{
+	font-size: 14px;
+	position: relative;
+	top: -20px;
+}
+.p3{
+	font-size: 14px;
+	position: relative;
+	left: 318px;
+	top: -53px;
+}
+.p4{
+	font-size: 14px;
+	top: -80px;
+}
+.ulo li{
+	width: 80px;
+	height: 25px;
+	display: inline-block;
+	padding: 2px;
+	margin: 20px
+}
+.ulo li:first-child{
+	background-color: red;
+	position: relative;
+	top: -40px;
+}
+.ulo li:nth-child(2){
+	background-color: yellow;
+	position: relative;
+	top: -40px;
+}
+.ulo li:nth-child(3){
+	background-color: teal;
+	position: relative;
+	top: -40px;
+}
+#x_id{
+	display: none;
+}
+#texaa{
+	width: 400px;
+	height: 40px;
+}
+</style>
+<div class="main">
+	<div class="layui-tab">
+	  <ul class="layui-tab-title">
+	    <li class="layui-this">招聘中</li>
+	    <li id="fb_success">招聘完成</li>
+	  </ul>
+	  <div class="layui-tab-content">
+	    <div class="layui-tab-item layui-show">
+	    	职位类型：<select class="form_control" id="one"></select>
+	    <div class="btns">
+		<button id="fb" type="button" class="btn bg-warning">发布职位</button>
+		<button id="dr" type="button" class="btn bg-primary dr">导入职位</button>
+		</div>
+		<table class="table">
+			<thead class="bg-dark">
+				<td>编号</td>
+		    		<td>招聘标题</td>
+		    		<td>发布人</td>
+		    		<td>联系方式</td>
+		    		<td>职位</td>
+		    		<td>发布时间</td>
+		    		<td>详情</td>
+		    		<td>状态</td>
+		    		<td>操作</td>
+			</thead>
+		  <tbody id="first_tbody"></tbody>
+		</table>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<table class="table">
+			<thead class="bg-dark">
+				<td>编号</td>
+		    		<td>招聘标题</td>
+		    		<td>发布人</td>
+		    		<td>联系方式</td>
+		    		<td>职位</td>
+		    		<td>发布时间</td>
+		    		<td>详情</td>
+		    		<td>状态</td>
+		    		<td>操作</td>
+			</thead>
+		  <tbody id="second_tbody"></tbody>
+		</table>
+	    </div>
+	  </div>
+	</div>
+</div>
+<!-- 修改模态框 -->
+<div id="x_modal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">修改</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<!-- 1 -->
+      	<div class="input-group mb-3">
+		   招聘标题：<input id="form_cont" type="text" class="form-control" style="width:100px">
+		   发布人：<input id="form_cont" type="text" class="form-control" style="width:100px">
+      	</div>
+      	<!-- 2 -->
+      	<div class="input-group mb-3">
+		    联系方式：<input id="form_cont" type="text" class="form-control" style="width:200px">
+		     状态：<input id="form_cont" type="text" class="form-control" style="width:100px">
+      	</div>
+      	<!-- 3 -->
+      	<div id="x_id" class="input-group mb-3">
+		    id：<input id="form_cont" type="text" class="form-control" style="width:100px">
+      	</div>
+      	<!-- 4 -->
+      	<div class="input-group mb-3">
+		   选择职位：<select class="form_control" id="three" style="width:100px"></select>
+		   招聘人数：<input id="form_cont" type="text" class="form-control" style="width:100px">
+      	</div>
+      	<!-- 5 -->
+      	<div class="input-group mb-3">
+		    薪资水平：<input id="form_cont" type="text" class="form-control" style="width:100px">
+		    招聘时长：<input id="form_cont" type="text" class="form-control" style="width:100px">
+      	</div>
+      	<div class="input-group mb-3">
+      		职位描述：<textarea id="texta" style="width:100px,height:40px"></textarea>
+      	</div>
+      <div class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="submit">保存</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>
+<!-- 查看模态框 -->
+<div id="y_modal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">详情</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<h5>190/天上一休一连锁超市急招营业员</h5>
+      	<h4>4000-5000/月</h4>
+      	<p class="p1">招6人 高中 1-2年</p>
+      	<p class="p2"><i class="fa fa-map-marker" aria-hidden="true"></i>北京 - 石景山 - 八宝山 北京市石景山区万达广场</p>
+      	<p class="p3">昆山杰普软件科技有限公司</p>
+      	<div class="ulo">
+      		<ul>
+      			<li>五险一金</li>
+      			<li>包吃</li>
+      			<li>包住</li>
+      		</ul>
+      	</div>
+      	<hr>
+      	<h5>职位描述</h5>
+			<p class="p4">
+			招聘 客服<br>
+			只招坐班，外包或在线客服暂不考虑。谢谢！<br>
+			薪资待遇<br>
+			无责任底薪3500（依个人能力而定）+全勤奖+提成综合待遇 多劳多得<br>
+			工作满半年上五险 3500元——20000元<br>
+			工作环境好，交通便利，紧邻地铁一号线，万达商圈。精英客服每年有一次加薪的机会。<br>
+			目前公司进入快速发展阶段，晋升空间巨大。一经录用，待遇从优。<br>
+			工作时间：早九到晚六。单休，无晚班。<br>
+			淘宝客服岗位职责：<br>
+			1、有淘宝及网络销售工作经验者优先。<br>
+			2、具有一定的网络沟通能力，能够热情的给顾客介绍产品，解答顾客的问题，积极主动销售。具有强烈的服务意识。<br>
+			3、能够很好的处理售后，不与顾客发生冲突，不搪塞推脱，设身处地为顾客着想，具有处理突发问题件的能力。
+			</p>
+      </div>
+      <div class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 发布职位 -->
+<div id="f_modal" class="modal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">职位详情</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		 <form class="form-inline">
+                <div class="form-group">
+                    招聘标题：<input type="text" class="form-control input-sm" placeholder="title" style="width:250px">
+                    招聘人数：<input type="text" class="form-control input-sm"
+                    placeholder="num" style="width:250px">
+                </div>
+                <div class="form-group">
+                	发布人 ：<input id="fbr_input" type="text" class="form-control input-sm" placeholder="contactName" style="width:250px">
+                	<div id="zhiwei">
+                		职 位 ：<select id="two" style="width:100px"></select>
+                	</div>
+                </div>
+
+                <div   class="from-group">
+                	职位状态：<input type="text" class="form-control input-sm"
+                    placeholder="status" style="width:250px">
+                </div>
+                <div   class="from-group">
+                	职位描述：<textarea id="texaa"></textarea>
+                </div>
+            </form>
+      </div>
+      <div id="buttons" class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="submit2()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 测试用 -->
+<!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+ <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+ <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+ <script>
+ 	var baseUrl="http://203.195.246.58:7777";
+ 	var dateParse=(dataString)=>{
+		  if(dataString){
+		    let date = new Date(dataString);
+		    let Y = date.getFullYear() + '-';
+		    let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		    let D = (date.getDate()< 10 ? '0'+date.getDate() : date.getDate())+' ';
+		    let h = (date.getHours()< 10 ? '0'+date.getHours() : date.getHours())+ ':';
+		    let m = (date.getMinutes()< 10 ? '0'+date.getMinutes() : date.getMinutes())+ ':';
+		    let s = (date.getSeconds()< 10 ? '0'+date.getSeconds() : date.getSeconds());
+		    return Y+M+D+h+m+s;
+		  }else{
+		    return '';
+		  }
+		}
+ 	$(function(){
+ 		$.get(baseUrl+"/Employment/findAll",function(res){
+ 			// 后台数据遍历放到tbody中
+ 			res.data.forEach(function(item,index){
+ 				if(item.status=="招聘完成"){
+ 					var newTr=$(`
+					<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"</td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a>
+				    		</td>
+				    		<td>`+item.status+`</td>
+				    		<td>
+				    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+				    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+				    		</td>
+				    	</tr>
+			`);$("#second_tbody").append(newTr);
+ 		}
+ 	})
+ })
+ })
+ </script>
+ <script>
+ 	var baseUrl="http://203.195.246.58:7777";
+ 	var dateParse=(dataString)=>{
+		  if(dataString){
+		    let date = new Date(dataString);
+		    let Y = date.getFullYear() + '-';
+		    let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		    let D = (date.getDate()< 10 ? '0'+date.getDate() : date.getDate())+' ';
+		    let h = (date.getHours()< 10 ? '0'+date.getHours() : date.getHours())+ ':';
+		    let m = (date.getMinutes()< 10 ? '0'+date.getMinutes() : date.getMinutes())+ ':';
+		    let s = (date.getSeconds()< 10 ? '0'+date.getSeconds() : date.getSeconds());
+		    return Y+M+D+h+m+s;
+		  }else{
+		    return '';
+		  }
+		}
+ 	// 模态框关闭
+ 	function close(){
+ 		$("#x_modal").modal("hide");
+ 	}
+ 	// 发布框的提交
+ 	function submit2(){
+ 		var title=$("#f_modal").find("input")[0].value;
+ 		var	num=$("#f_modal").find("input")[1].value;
+ 		var contactName=$("#f_modal").find("input")[2].value;
+ 		// var job=$("#f_modal").find("select").val();
+ 		var job=$("#f_modal").find("select").val();
+ 		// console.log(job);
+ 		var status=$("#f_modal").find("input")[3].value;
+ 		var description=$("#f_modal").find("textarea")[0].value;
+ 		var data={
+ 			title:title,
+ 			num:num,
+ 			contactName:contactName,
+ 			job:job,
+ 			status:status,
+ 			description:description
+ 		}
+ 		$.post(baseUrl+"/Employment/saveOrUpdate",data,function(result){
+ 			if(result.status==200){
+ 				rerodata();
+ 			}
+ 			else{
+ 				alert(result.message);
+ 			}
+ 		})
+ 		$("#f_modal").modal("hide");
+ 	}
+ 	// 修改框提交
+ 	$("#submit").click(function(){
+ 		// alert(1);
+ 		var id=$("#x_modal").find("input")[4].value
+		var title=$("#x_modal").find("input")[0].value
+		var contactName=$("#x_modal").find("input")[1].value
+		var contactPhone=$("#x_modal").find("input")[2].value
+		var status=$("#x_modal").find("input")[3].value
+		var num=$("#x_modal").find("input")[4].value
+		var salary=$("#x_modal").find("input")[5].value
+		var workingHours=$("#x_modal").find("input")[6].value
+		var description=$("#x_modal").find("textarea")[0].value
+		var job=$("#x_modal").find("select option:checked").val();
+		$.post(baseUrl+"/Employment/saveOrUpdate",{
+			id:id,
+			title:title,
+			contactName:contactName,
+			contactPhone:contactPhone,
+			status:status,
+			num:num,
+			salary:salary,
+			workingHours:workingHours,
+			description:description,
+			job:job
+		},function(result){
+			if(result.status==200){
+				rerodata();
+			}else{
+				alert(result.message);
+			}
+		})
+		$("#x_modal").modal("hide");
+ 	})
+ 	function rerodata(){
+		// 将数据清空
+		$("#first_tbody").empty();
+ 		$.get(baseUrl+"/Employment/findAll",function(res){
+ 			// 后台数据遍历放到tbody中
+ 			res.data.forEach(function(item,index){
+ 				if(item.status!="招聘完成"){
+				var newTr=$(`
+					<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"</td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a>
+				    		</td>
+				    		<td>`+item.status+`</td>
+				    		<td>
+				    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+				    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+				    		</td>
+				    	</tr>
+			`);
+ 				$("#first_tbody").append(newTr);
+ 				}
+ 			})
+ 			var a=[];
+			res.data.forEach(function(item,index){
+				a.push(item.job);
+			})
+			var newa=[];
+			for(var i=0;i<=a.length;i++){
+			  var isZai=false;
+			  for(var j=0;j<=newa.length;j++){
+			  		if(a[ i ] == newa[ j ]){
+			  		isZai=true;
+			  		break;
+			  	}
+			  }
+			  if(isZai==false){
+			    	newa[newa.length]=a[i];
+			  	}
+			}
+			 for(var i=0;i<newa.length;i++){
+			 	//追加到select中
+				 $(`
+				  	<option value="newa[i]">`+newa[i]+`</option>`).appendTo($("#one"));
+			 }
+			 for(var i=0;i<newa.length;i++){
+			 	// console.log(newa[i]);
+			 	//追加到select中
+				 $(`
+				  	<option>`+newa[i]+`</option>`).appendTo($("#two"));
+			 }
+			 for(var i=0;i<newa.length;i++){
+			 	// console.log(newa[i]);
+			 	//追加到select中
+				 $(`
+				  	<option>`+newa[i]+`</option>`).appendTo($("#three"));
+			 }
+
+
+ 			
+		})
+ 	}
+ 		
+ 		$(function(){
+ 			//数据加载
+ 			rerodata();
+ 			// 给one选中时加载数据
+		$("#one").change(function(event){
+			$("#first_tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var job = mySelect.options[index].text; 
+            //获取选中文本，即option标签对之间的文字
+            var url=baseUrl+"/Employment/findByJob";
+            var data={
+            	job:job
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						result.data.forEach(function(item,index){
+							var newTr=$(`
+									<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"</td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a>
+				    		</td>
+				    		<td>`+item.status+`</td>
+				    		<td>
+				    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+				    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+				    		</td>
+				    	</tr>
+							`);
+							$("#first_tbody").append(newTr);
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		});
+ 			// 按钮事件触发
+ 			$("#first_tbody").on("click","a",function(result){
+ 				switch(this.className){
+ 					case"btn_del":
+ 					// 删除
+ 					var id=$(this).parents("tr").children().eq(0).find("input").val();
+ 					var data={
+ 						id:id
+ 					}
+ 					$.post(baseUrl+"/Employment/deleteById",data,function(result){
+ 						if(result.status===200){
+ 							rerodata();
+ 						}else{
+ 							alert(result);
+ 						}
+ 					})
+ 					break;
+ 					// 修改
+ 					case"btn_edit":
+ 					// 模态框显示
+					$("#x_modal").modal("show");
+					var id=$(this).parents("tr").children().eq(0).find("input").val();
+				 	var data={
+				 			id:id
+				 	};
+				 	$.get(baseUrl+"/Employment/findById",data,function(result){
+				 		// console.log(result.data.data)
+				 			$("#x_modal").find("input")[4].value=result.data.id;
+				 			$("#x_modal").find("input")[0].value=result.data.title;
+				 			$("#x_modal").find("input")[1].value=result.data.contactName;
+				 			$("#x_modal").find("input")[2].value=result.data.contactPhone;
+				 			$("#x_modal").find("input")[3].value=result.data.status;
+				 			$("#x_modal").find("input")[4].value=result.data.num;
+				 			$("#x_modal").find("input")[5].value=result.data.salary;
+				 			$("#x_modal").find("input")[6].value=result.data.workingHours;
+				 			$("#x_modal").find("textarea")[0].value=result.data.description;
+				 		})
+ 					break;
+ 					// 详情显示
+ 					case"btn_show":
+ 					console.log($("#y_modal"));
+ 					$("#y_modal").modal("show");
+ 					break;
+ 				}
+ 			})
+ 			// 按钮组事件触发
+ 			$("#fb").click(function(){
+ 				$("#f_modal").modal("show");
+ 				// console.log($("#f_modal"));
+ 			})
+ 			$("#dr").click(function(){
+ 				alert(2);
+ 			})
+ 	})
+ </script>

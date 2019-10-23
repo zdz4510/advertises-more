@@ -1,0 +1,350 @@
+<style>
+	.main{
+		position: relative;
+	}
+	.btns{
+		position: absolute;
+		right: 10px;
+		top: 23px;
+		z-index: 2000;
+	}
+	.table{
+		position: relative;
+		top:26px;
+	}
+	#sex{
+		position: relative;
+		left: -25px;
+	}
+	#fbr_input{
+		position: relative;
+		left: 17px;
+	}
+	#sta_input{
+		position: relative;
+		left: 17px;
+	}
+	p{
+		color: red;
+		font-size: 12px;
+	}
+	#mb{
+		width: 80px;
+		height: 25px;
+		position: relative;
+		left: 350px;
+		top: -20px;
+		font-size: 12px
+
+	}
+	tbody tr:hover{
+	background-color: #ededed;
+	}
+	.neirong{
+		border: 1px dashed #333;
+		width: 300px;
+		height: 300px;
+		margin: 0 auto;
+	}
+</style>
+<div class="main">
+	<div class="btns">
+		<button id="btn_tj" type="button" class="btn btn-warning" style="color:#fff"><i class="fa fa-info" aria-hidden="true">添加客服</i></button>
+		<button id="btn_dr" type="button" class="btn btn-primary"><i class="fa fa-info" aria-hidden="true">导入客服</i></button>
+	</div>
+	<div class="layui-tab">
+	  <ul class="layui-tab-title">
+	    <li class="layui-this">客服列表</li>
+	  </ul>
+	  <div class="layui-tab-content">
+	    <div class="layui-tab-item layui-show">
+	    	状态：<select id="one"></select>
+			性别：<select id="two"></select>
+			<!-- <select id="three"></select> -->
+		<table class="table">
+			<thead class="bg-dark" style="color:#fff">
+				<td>编号</td>
+				<td>用户名</td>
+				<td>姓名</td>
+				<td>性别</td>
+				<td>状态</td>
+				<td>操作</td>
+			</thead>
+		  <tbody></tbody>
+		</table>
+	    </div>
+	  </div>
+	</div>
+</div>
+<!-- 客服发布 -->
+<div id="fk_modal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">详情</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+			<form class="form-inline">
+                <div class="form-group">
+                    用户名：<input type="text" class="form-control input-sm" placeholder="username" style="width:400px">
+                </div>
+                <div  class="form-group">
+                	姓名：<input id="fbr_input" type="text" class="form-control input-sm"
+                    placeholder="realname" style="width:400px">
+                </div>
+                <div id="sex" class="form-group">
+			  	<label for="exampleInputName5" style="width:80px">性别：</label>
+			  	<div class="form-check form-check-inline">
+					<input id="input_gender_male" type="radio" class="form-check-input" name="gender" value="男"  style="width:10px">
+					<label for="input_gender_male" class="form-check-label"  style="width:30px">男</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input id="input_gender_female" type="radio" class="form-check-input" name="gender" value="女"  style="width:10px">
+				<label for="input_gender_female" class="form-check-label"  style="width:30px">女</label> 
+				</div>
+			  </div>
+			  <div  class="form-group">
+                	状态：<input id="sta_input" type="text" class="form-control input-sm"
+                    placeholder="status" style="width:400px">
+               </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="submit">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 导入模态框 -->
+<div id="dr_modal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">导入</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<p>
+
+			使用导入功能时，请按照模板表格规定的字段去填写对应信息，
+			<br>
+			您可以点击按钮下载模板表格，填写完后在下提交 ：
+		</p>
+		<button id="mb" type="button" class="btn btn-primary" id="submit">下载模板</button>
+		<div class="neirong">
+			
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="submit2">发布</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /客服发布 -->
+<script>
+	$(function(){
+		var baseUrl="http://203.195.246.58:7777";
+		function reload(){
+			$("tbody").empty();
+			$.get(baseUrl+"/CustomerService/findAll",function(result){
+			console.log(0);
+			result.data.forEach(function(item,index){
+				$(`
+				<tr>
+					<td><input type="checkbox" value="`+item.id+`"</td>
+					<td>`+item.username+`</td>
+					<td>`+item.realname+`</td>
+					<td>`+item.gender+`</td>
+					<td>`+item.status+`</td>
+					<td>
+						<a class="dj" id="dj" href="javascript:void(0)">`+"删除"+`</a></td>
+						</td>
+				</tr>
+				`).appendTo($("tbody"));
+			})
+			// 遍历数据中的要筛选的数据,并删除要塞选的重复数据显示到选项卡中
+				var a=[],b=[];
+				result.data.forEach(function(item,index){
+					
+					a.push(item.status);
+					b.push(item.gender);
+					// $(`
+					// 	<option value="a.item">`+a.item+`</option>`).appendTo($("#one"));
+				})
+				var newa=[],newb=[];
+				//2.遍历旧数组a 中所有元素;
+				for(var i=0;i<=a.length;i++){
+				  //3.定义一个isZai变量表示开关，默认为false状态;
+				  var isZai=false;
+				  for(var j=0;j<=newa.length;j++){
+				  // 4.遍历新数组所有元素与旧数组元素比较(a[ i ] == newa[ j ]);
+				  		if(a[ i ] == newa[ j ]){
+				  		//5.如果该元素存在于新数组中，则改变开关状态为true;
+				  		isZai=true;//假设被推翻
+				  		break;//一旦重复后面没有比较必要
+				  	}
+				  }
+				  // 6.根据开关状态实现需求:如果开关为false状态，则将旧数组的元素添加到新数组中;
+				  if(isZai==false){
+				    	newa[newa.length]=a[i];
+				  	}
+				}
+				 for(var i=0;i<newa.length;i++){
+				 	// console.log(i)
+				 	//追加到select中
+					 $(`
+					  	<option value="newa[i]">`+newa[i]+`</option>`).appendTo($("#one"));
+				 }
+
+
+				//复制一份
+				 for(var i=0;i<=b.length;i++){
+				  var isZa=false;
+				  for(var j=0;j<=newb.length;j++){
+				  		if(b[ i ] == newb[ j ]){
+				  		isZa=true;
+				  		break;
+				  	}
+				  }
+				  if(isZa==false){
+				    	newb[newb.length]=b[i];
+				  	}
+				}
+				 for(var i=0;i<newb.length;i++){
+					 $(`
+					  	<option value="newb[i]">`+newb[i]+`</option>`).appendTo($("#two"));
+				 }
+			})
+		}
+		reload();
+		
+		// 数据载入完成
+		$("#one").change(function(event){
+			$("tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var status = mySelect.options[index].text; 
+            //获取选中文本，即option标签对之间的文字
+            // alert(status);
+            var url=baseUrl+"/CustomerService/findByEducation";
+            var data={
+            	status:status
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						// console.log(result.data);
+						result.data.forEach(function(item,index){
+							var newTr=$(`
+									<tr>
+										<td><input type="checkbox" value="`+item.id+`"</td>
+										<td>`+item.username+`</td>
+										<td>`+item.realname+`</td>
+										<td>`+item.gender+`</td>
+										<td>`+item.status+`</td>
+										<td>
+											<a class="dj" id="dj" href="javascript:void(0)">`+"删除"+`</a></td>
+											</td>
+									</tr>
+							`);
+							$("tbody").append(newTr);
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		})
+		$("#two").change(function(event){
+			$("tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var gender = mySelect.options[index].text; 
+            //获取选中文本，即option标签对之间的文字
+            // alert(status);
+            var url=baseUrl+"/CustomerService/findByGender";
+            var data={
+            	gender:gender
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						// console.log(result.data);
+						result.data.forEach(function(item,index){
+							var newTr=$(`
+									<tr>
+										<td><input type="checkbox" value="`+item.id+`"</td>
+										<td>`+item.username+`</td>
+										<td>`+item.realname+`</td>
+										<td>`+item.gender+`</td>
+										<td>`+item.status+`</td>
+										<td>
+											<a class="dj" id="dj" href="javascript:void(0)">`+"删除"+`</a></td>
+											</td>
+									</tr>
+							`);
+							$("tbody").append(newTr);
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		})
+		$("#btn_tj").click(function(){
+			$("#fk_modal").modal("show");
+		})
+		$("#submit").click(function(){
+			var username=$("#fk_modal").find("input")[0].value;
+			var realname=$("#fk_modal").find("input")[1].value;
+			var gender=$("input[type=radio]:checked").val();
+			var status=$("#fk_modal").find("input")[2].value;
+			console.log(gender);
+			var data={
+				username:username,
+				realname:realname,
+				gender:gender,
+				status:status
+			}
+			$.post(baseUrl+"/CustomerService/saveOrUpdate",data,function(result){
+				if(result.status==200){
+					reload();
+				}else{
+					alert(result.message);
+				}
+			})
+			$("#fk_modal").modal("hide");
+		})
+		$("#btn_dr").click(function(){
+			$("#dr_modal").modal("show");
+		})
+		$("#submit2").click(function(){
+			$("#dr_modal").modal("hide");
+		})
+		$("tbody").on("click","a",function(event){
+			switch(this.className){
+				case"dj":
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				}
+				$.post(baseUrl+"/CustomerService/deleteById",data,function(result){
+					if(result.status==200){
+						reload();
+					}else{
+						alert(result.message);
+					}
+				})
+				break;
+			}
+		})
+})
+</script>

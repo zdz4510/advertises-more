@@ -1,0 +1,642 @@
+<style>
+thead{
+	color: #fff;
+}
+#image{
+	position: relative;
+	left: 100px;
+}
+#shtg{
+	color: green;
+}
+.reject{
+	background-color: red;
+	color: #fff;
+}
+.pass{
+	background-color: green;
+	color: #fff;
+}
+#yjj{
+	color: red;
+}
+a:hover{
+	color: #fff;
+}
+.btn_show:hover{
+	color: blue;
+}
+#shangjia{
+	position: relative;
+	left: -80px;
+}
+tbody tr:hover{
+	background-color: #ededed;
+}
+</style>
+<div class="main">
+	<div class="layui-tab">
+	  <ul class="layui-tab-title">
+	    <li class="layui-this">商家审核</li>
+	    <li id="fb_success">招聘审核</li>
+	  </ul>
+	  <div class="layui-tab-content">
+	    <div class="layui-tab-item layui-show">
+	    	行业：<select class="form_control" id="one"></select>
+	    <!-- <div class="btns"> -->
+		<!-- <button id="fb" type="button" class="btn bg-warning">一键通过</button> -->
+		<!-- </div> -->
+		<table class="table">
+			<thead class="bg-dark">
+					<td>编号</td>
+		    		<td>企业名称</td>
+		    		<td>联系人</td>
+		    		<td>联系方式</td>
+		    		<td>行业</td>
+		    		<td>所在地</td>
+		    		<td>规模</td>
+		    		<td>详情</td>
+		    		<td>操作</td>
+			</thead>
+		  <tbody id="first_tbody"></tbody>
+		</table>
+	    </div>
+	    <div class="layui-tab-item">
+	    职位类型：<select class="form_control" id="two"></select>
+	    	<table class="table">
+			<thead class="bg-dark">
+					<td>编号</td>
+		    		<td>招聘标题</td>
+		    		<td>发布人</td>
+		    		<td>联系方式</td>
+		    		<td>职位</td>
+		    		<td>发布时间</td>
+		    		<td>详情</td>
+		    		<td>操作</td>
+			</thead>
+		  <tbody id="second_tbody"></tbody>
+		</table>
+	    </div>
+	  </div>
+	</div>
+</div>
+<!-- 查看模态框 -->
+<div id="s_modal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">详情</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<b>北京十方缘生物科技有限公司</b>
+        <p>互联网/电子商务</p>
+        <p>500-999人</p>
+        <hr>
+        <p>行业类型： 商务服务业</p>
+        <p>成立时间： 2017年09月28日</p>
+        <p>注册资本： 500万人民币</p>
+        <hr>
+        <p>北京十方缘生物科技有限公司始建于2003年1月13日，是一家集生物产品等委托生产、推广于一体的现代化股份制集团公司。公司以客户需求为经营导向，以人类大众健康为己任，提倡健康的生活方式。</p>
+        <hr>
+        <div id="image">
+        <img id="shangjia" src="./images/shangjia.png" alt="空">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+	$(function(){
+		var baseUrl="http://203.195.246.58:7777";
+		function reload(){
+			$("#first_tbody").empty();
+			$.get(baseUrl+"/Business/findAll",function(result){
+			result.data.forEach(function(item,index){
+				if(item.status=="审核通过"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="shtg" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#first_tbody");
+				}
+				else if(item.status=="已拒绝"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="yjj" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#first_tbody");
+				}
+				else{
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a class="reject" href="javascript:void(0)">拒绝</a>
+				    			<a class="pass" href="javascript:void(0)">通过</a>
+				    		</td>
+				    	</tr>
+						`).appendTo("#first_tbody");
+				}
+			})
+			var a=[];
+			result.data.forEach(function(item,index){
+				a.push(item.industry);
+			})
+			var newa=[];
+			for(var i=0;i<=a.length;i++){
+			  var isZai=false;
+			  for(var j=0;j<=newa.length;j++){
+			  		if(a[ i ] == newa[ j ]){
+			  		isZai=true;
+			  		break;
+			  	}
+			  }
+			  if(isZai==false){
+			    	newa[newa.length]=a[i];
+			  	}
+			}
+			 for(var i=0;i<newa.length;i++){
+			 	//追加到select中
+				 $(`
+				  	<option value="newa[i]">`+newa[i]+`</option>`).appendTo($("#one"));
+			 }
+		})
+		}
+		reload();
+		
+		$("#one").change(function(event){
+			$("#first_tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var industry = mySelect.options[index].text; 
+            //获取选中文本，即option标签对之间的文字
+            var url=baseUrl+"/Business/findByIndustry";
+            var data={
+            	industry:industry
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						result.data.forEach(function(item,index){
+						if(item.status=="审核通过"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="shtg" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#first_tbody");
+				}
+				else if(item.status=="已拒绝"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="yjj" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#first_tbody");
+				}
+				else{
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a class="reject" href="javascript:void(0)">拒绝</a>
+				    			<a class="pass" href="javascript:void(0)">通过</a>
+				    		</td>
+				    	</tr>
+						`).appendTo("#first_tbody");
+				}
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		})
+		$("#first_tbody").on("click","a",function(event){
+			switch(this.className){
+				case"btn_show":
+				$("#s_modal").modal("show");
+				break;
+				case"reject":
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				}
+				$.get(baseUrl+"/Business/findById",data,function(result){
+					var id=result.data.id;
+					var name=result.data.name;
+					var contactName=result.data.contactName;
+					var contactPhone=result.data.contactPhone;
+					var industry=result.data.industry;
+					var location=result.data.location;
+					var scale=result.data.scale;
+					var status="已拒绝";
+					var establishedTime=result.data.establishedTime;
+					var registeredCapital=result.data.registeredCapital;
+					var description=result.data.description;
+					var businessLicense=result.data.businessLicense;
+					$.post(baseUrl+"/Business/saveOrUpdate",{
+					id:id,
+					name:name,
+					contactName:contactName,
+					contactPhone:contactPhone,
+					industry:industry,
+					location:location,
+					scale:scale,
+					status:status,
+					establishedTime:establishedTime,
+					registeredCapital:registeredCapital,
+					description:description,
+					businessLicense:businessLicense
+				},function(result){
+					if(result.status==200){
+						// console.log(data);
+						reload();
+					}else{
+						alert(result.message);
+					}
+				})
+				})
+				break;
+				case"pass":
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				}
+				$.get(baseUrl+"/Business/findById",data,function(result){
+					var id=result.data.id;
+					var name=result.data.name;
+					var contactName=result.data.contactName;
+					var contactPhone=result.data.contactPhone;
+					var industry=result.data.industry;
+					var location=result.data.location;
+					var scale=result.data.scale;
+					var status="审核通过";
+					var establishedTime=result.data.establishedTime;
+					var registeredCapital=result.data.registeredCapital;
+					var description=result.data.description;
+					var businessLicense=result.data.businessLicense;
+					$.post(baseUrl+"/Business/saveOrUpdate",{
+					id:id,
+					name:name,
+					contactName:contactName,
+					contactPhone:contactPhone,
+					industry:industry,
+					location:location,
+					scale:scale,
+					status:status,
+					establishedTime:establishedTime,
+					registeredCapital:registeredCapital,
+					description:description,
+					businessLicense:businessLicense
+				},function(result){
+					if(result.status==200){
+						// console.log(data);
+						reload();
+					}else{
+						alert(result.message);
+					}
+				})
+				})
+				break;
+			}
+		})
+		
+	})
+</script>
+<script>
+	$(function(){
+		var baseUrl="http://203.195.246.58:7777";
+		var dateParse=(dataString)=>{
+		  if(dataString){
+		    let date = new Date(dataString);
+		    let Y = date.getFullYear() + '-';
+		    let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+		    let D = (date.getDate()< 10 ? '0'+date.getDate() : date.getDate())+' ';
+		    let h = (date.getHours()< 10 ? '0'+date.getHours() : date.getHours())+ ':';
+		    let m = (date.getMinutes()< 10 ? '0'+date.getMinutes() : date.getMinutes())+ ':';
+		    let s = (date.getSeconds()< 10 ? '0'+date.getSeconds() : date.getSeconds());
+		    return Y+M+D+h+m+s;
+		  }else{
+		    return '';
+		  }
+		}
+		function rerow(){
+			$("#second_tbody").empty();
+			$.get(baseUrl+"/Employment/findAll",function(result){
+			result.data.forEach(function(item,index){
+				if(item.status=="审核通过"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="shtg" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#second_tbody");
+				}
+				else if(item.status=="已拒绝"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="yjj" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("second_tbody");
+				}
+				else{
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a class="reject" href="javascript:void(0)">拒绝</a>
+				    			<a class="pass" href="javascript:void(0)">通过</a>
+				    		</td>
+				    	</tr>
+						`).appendTo("#second_tbody");
+				}
+			})
+			var b=[];
+			result.data.forEach(function(item,index){
+				b.push(item.job);
+			})
+			var newb=[];
+			for(var i=0;i<=b.length;i++){
+			  var isZa=false;
+			  for(var j=0;j<=newb.length;j++){
+			  		if(b[ i ] == newb[ j ]){
+			  		isZa=true;
+			  		break;
+			  	}
+			  }
+			  if(isZa==false){
+			    	newb[newb.length]=b[i];
+			  	}
+			}
+			 for(var i=0;i<newb.length;i++){
+			 	//追加到select中
+				 $(`
+				  	<option value="newb[i]">`+newb[i]+`</option>`).appendTo($("#two"));
+			 }
+		})
+		}
+		rerow();
+		
+		$("#two").change(function(event){
+			$("#second_tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var job = mySelect.options[index].text; 
+            //获取选中文本，即option标签对之间的文字
+            var url=baseUrl+"/Employment/findByJob";
+            var data={
+            	job:job
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						result.data.forEach(function(item,index){
+						if(item.status=="审核通过"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="shtg" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#second_tbody");
+				}
+				else if(item.status=="已拒绝"){
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a id="yjj" href="javascript:void(0)">`+item.status+`</a></td>
+				    		</td>
+				    	</tr>
+						`).appendTo("#second_tbody");
+				}
+				else{
+					$(`
+						<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"></td>
+				    		<td>`+item.title+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.job+`</td>
+				    		<td>`+dateParse(item.publishTime)+`</td>
+				    		<td>
+				    			<a class="btn_show" href="javascript:void(0)">查看</a></td>
+				    		<td>
+				    			<a class="reject" href="javascript:void(0)">拒绝</a>
+				    			<a class="pass" href="javascript:void(0)">通过</a>
+				    		</td>
+				    	</tr>
+						`).appendTo("#second_tbody");
+				}
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		})
+		$("#second_tbody").on("click","a",function(event){
+			switch(this.className){
+				case"btn_show":
+				$("#s_modal").modal("show");
+				break;
+				case"reject":
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				};
+				$.get(baseUrl+"/Employment/findById",data,function(result){
+					var id=result.data.id;
+					var title=result.data.title;
+					var contactName=result.data.contactName;
+					var job=result.data.job;
+					var contactPhone=result.data.contactPhone;
+					var publishTime=result.data.publishTime;
+					var status="已拒绝";
+					var workingHours=result.data.workingHours;
+					var num=result.data.num;
+					var description=result.data.description;
+					var welfare=result.data.welfare;
+					var businessId=result.data.businessId;
+					var salary=result.data.salary;
+					var auditStatus=result.data.auditStatus;
+					console.log(businessId+status);
+					$.post(baseUrl+"/Employment/saveOrUpdate",{
+						id:id,
+						title:title,
+						contactName:contactName,
+						contactPhone:contactPhone,
+						job:job,
+						publishTime:publishTime,
+						status:status,
+						workingHours:workingHours,
+						num:num,
+						description:description,
+						welfare:welfare,
+						businessId:businessId,
+						salary:salary,
+						auditStatus:auditStatus
+					},function(result){
+						if(result.status==200){
+							rerow();
+						}else{
+							alert(result.message);
+						}
+
+					})
+				})
+				break;
+				case"pass":
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				};
+				$.get(baseUrl+"/Employment/findById",data,function(result){
+					var id=result.data.id;
+					var title=result.data.title;
+					var contactName=result.data.contactName;
+					var job=result.data.job;
+					var contactPhone=result.data.contactPhone;
+					var publishTime=result.data.publishTime;
+					var status="审核通过";
+					var workingHours=result.data.workingHours;
+					var num=result.data.num;
+					var description=result.data.description;
+					var welfare=result.data.welfare;
+					var businessId=result.data.businessId;
+					var salary=result.data.salary;
+					$.post(baseUrl+"/Employment/saveOrUpdate",{
+						id:id,
+						title:title,
+						contactName:contactName,
+						contactPhone:contactPhone,
+						job:job,
+						publishTime:publishTime,
+						status:status,
+						workingHours:workingHours,
+						num:num,
+						description:description,
+						welfare:welfare,
+						salary:salary,
+						businessId:businessId
+					},function(result){
+						if(result.status==200){
+							rerow();
+						}else{
+							alert(result.message);
+						}
+
+					})
+				})
+				break;
+			}
+		})
+		
+	})
+</script>

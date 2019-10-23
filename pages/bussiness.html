@@ -1,0 +1,494 @@
+﻿<style>
+.main{
+		position: relative;
+	}
+.btn_del{
+	color: red;
+}
+.btn_edit{
+	color: black;
+}
+#shangjia{
+	width: 450px;
+	height: 300px;
+}
+#x_modal{
+	z-index: 10000;
+}
+thead{
+	color: #fff;
+}
+tbody tr:hover{
+	background-color: #ededed;
+}
+</style>
+
+<div class="main">
+	<div class="top">
+	<span>所在地:
+	<select name="local" id="one">
+			
+		</select>
+	</span>
+	<span>规模:
+	<select name="local" id="two">
+			
+		</select>
+	</span>
+	<span>行业类型:
+	<select name="local" id="three">
+			
+		</select>
+	</span>
+	</div>
+	<div class="tb">
+		<table class="table">
+		    <thead class="bg-dark">
+		    		<td>编号</td>
+		    		<td>商家名称</td>
+		    		<td>联系人名称</td>
+		    		<td>联系方式</td>
+		    		<td>行业类型</td>
+		    		<td>地址</td>
+		    		<td>公司规模</td>
+		    		<td>状态</td>
+		    		<td>详情</td>
+		    		<td>操作</td>
+		    </thead>
+		    	<tbody></tbody>
+		    </table>
+	</div>
+</div>
+<div id="x_modal" class="modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">修改商家数据</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close(this)">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+       <!-- 1 -->
+        <div class="input-group mb-3">
+		id：<input id="form_cont" type="text" class="form-control">
+		状态：<input type="text" class="form-control">
+		
+      </div>
+      <!-- 2 -->
+        <div class="input-group mb-3">
+        联系人:<input id="form_cont" type="text" class="form-control">
+		联系方式：<input type="text" class="form-control">
+      </div>
+      <!-- 3 -->
+        <div class="input-group mb-3">
+        	商家名称：<input type="text" class="form-control">
+		  行业类型：<input type="text" class="form-control">
+		</div>
+      <!-- 4 -->
+        <div class="input-group mb-3">
+		 地址：<input type="text" class="form-control">
+		 规模：<input type="text" class="form-control">
+		</div>
+      <!-- 5 -->
+        <div class="input-group mb-3">
+        成立时间：<input type="text" class="form-control">
+        注册资本：<input type="text" class="form-control">
+		</div>
+
+      <!-- 6 -->
+        <div class="input-group mb-3">
+		 营业执照：<input type="text" class="form-control">
+		</div>
+	<!-- 7 -->
+        <div class="input-group mb-3">
+        详细信息：<input type="textarea" class="form-control">
+        </div>
+      <div class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="submit()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- 查看模态框 -->
+<div id="y_modal" class="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">详情</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span onclick="close()">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<b>北京十方缘生物科技有限公司</b>
+        <p>互联网/电子商务</p>
+        <p>500-999人</p>
+        <hr>
+        <p>行业类型： 商务服务业</p>
+        <p>成立时间： 2017年09月28日</p>
+        <p>注册资本： 500万人民币</p>
+        <hr>
+        <p>北京十方缘生物科技有限公司始建于2003年1月13日，是一家集生物产品等委托生产、推广于一体的现代化股份制集团公司。公司以客户需求为经营导向，以人类大众健康为己任，提倡健康的生活方式。</p>
+        <hr>
+        <div class="image">
+        <img id="shangjia" src="./images/shangjia.png" alt="空">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="close()" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 测试用 -->
+ <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+ <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+ <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+<script>
+	var baseurl="http://203.195.246.58:7777";
+	// 给关闭模态框
+	function close(){
+		$("#x_modal").modal("hide");
+	}
+	//模态框的数据添加
+	function submit(){
+		//更新地址
+		var url=baseurl+"/Business/saveOrUpdate";
+		
+		
+		
+		
+		
+		var id=$("#x_modal").find("input")[0].value;
+		var status=$("#x_modal").find("input")[1].value;
+		var contactName=$("#x_modal").find("input")[2].value;
+		//测试数据
+		// console.log(contactName);
+		var contactPhone=$("#x_modal").find("input")[3].value;
+		var name=$("#x_modal").find("input")[4].value;
+		var industry=$("#x_modal").find("input")[5].value;
+		var location=$("#x_modal").find("input")[6].value;
+		var scale=$("#x_modal").find("input")[7].value;
+		var establishedTime=$("#x_modal").find("input")[8].value;
+		var registeredCapital=$("#x_modal").find("input")[9].value;
+		var businessLicense=$("#x_modal").find("input")[10].value;
+		var description=$("#x_modal").find("input")[11].value;
+		// 传输数据
+		var data={
+					id:id,
+					status:status,
+					contactName:contactName,
+					contactPhone:contactPhone,
+					name:name,
+					industry:industry,
+					location:location,
+					scale:scale,
+					establishedTime:establishedTime,
+					registeredCapital:registeredCapital,
+					businessLicense:businessLicense,
+					description:description
+				}
+		$.post(url,data,function(result){
+					if(result.status === 200){
+						// 更新页面
+						reView();
+					} else {
+						alert(result.message);
+					}
+				})
+		close();
+	}
+	function reView(){
+		// 将数据清空
+		$("tbody").empty();
+		// 载入数据
+		$.get(baseurl+"/Business/findAll",function(res){
+		// console.log(res.data);
+		res.data.forEach(function(item,index){
+			var newTr=$(`
+					<tr>
+				    		<td><input type="checkbox" value="`+item.id+`"</td>
+				    		<td>`+item.name+`</td>
+				    		<td>`+item.contactName+`</td>
+				    		<td>`+item.contactPhone+`</td>
+				    		<td>`+item.industry+`</td>
+				    		<td>`+item.location+`</td>
+				    		<td>`+item.scale+`</td>
+				    		<td>`+item.status+`</td>
+				    		<td>
+				    			<a class="showit" href="javascript:void(0)">查看</a>
+				    		</td>
+				    		<td>
+				    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+				    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+				    		</td>
+				    	</tr>
+			`);
+			$("tbody").append(newTr);
+		})
+		// 遍历数据中的要筛选的数据,并删除要塞选的重复数据显示到选项卡中
+		var a=[],b=[],c=[];
+		res.data.forEach(function(item,index){
+			
+			a.push(item.location);
+			b.push(item.scale);
+			c.push(item.industry);
+			// $(`
+			// 	<option value="a.item">`+a.item+`</option>`).appendTo($("#one"));
+		})
+		var newa=[],newb=[],newc=[];
+		//2.遍历旧数组a 中所有元素;
+		for(var i=0;i<=a.length;i++){
+		  //3.定义一个isZai变量表示开关，默认为false状态;
+		  var isZai=false;
+		  for(var j=0;j<=newa.length;j++){
+		  // 4.遍历新数组所有元素与旧数组元素比较(a[ i ] == newa[ j ]);
+		  		if(a[ i ] == newa[ j ]){
+		  		//5.如果该元素存在于新数组中，则改变开关状态为true;
+		  		isZai=true;//假设被推翻
+		  		break;//一旦重复后面没有比较必要
+		  	}
+		  }
+		  // 6.根据开关状态实现需求:如果开关为false状态，则将旧数组的元素添加到新数组中;
+		  if(isZai==false){
+		    	newa[newa.length]=a[i];
+		  	}
+		}
+		 for(var i=0;i<newa.length;i++){
+		 	// console.log(i)
+		 	//追加到select中
+			 $(`
+			  	<option value="newa[i]">`+newa[i]+`</option>`).appendTo($("#one"));
+		 }
+
+
+		//复制一份
+		 for(var i=0;i<=b.length;i++){
+		  var isZa=false;
+		  for(var j=0;j<=newb.length;j++){
+		  		if(b[ i ] == newb[ j ]){
+		  		isZa=true;
+		  		break;
+		  	}
+		  }
+		  if(isZa==false){
+		    	newb[newb.length]=b[i];
+		  	}
+		}
+		 for(var i=0;i<newb.length;i++){
+			 $(`
+			  	<option value="newb[i]">`+newb[i]+`</option>`).appendTo($("#two"));
+		 }
+		 //复制第二份
+		 for(var i=0;i<=c.length;i++){
+		  var isZ=false;
+		  for(var j=0;j<=newc.length;j++){
+		  		if(c[ i ] == newc[ j ]){
+		  		isZ=true;
+		  		break;
+		  	}
+		  }
+		  if(isZ==false){
+		    	newc[newc.length]=c[i];
+		  	}
+		}
+		 for(var i=0;i<newc.length;i++){
+			 $(`
+			  	<option value="newc[i]">`+newc[i]+`</option>`).appendTo($("#three"));
+		 }
+	})
+}
+
+	
+	//页面加载完成后
+	$(function(){
+		//查询数据
+		reView();
+		// 给one选中时加载数据
+		$("#one").change(function(event){
+			$("tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var location = mySelect.options[index].text; 
+            //获取选中文本，即option标签对之间的文字
+            var url=baseurl+"/Business/findByLocation";
+            var data={
+            	location:location
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						console.log(result.data);
+						result.data.forEach(function(item,index){
+							var newTr=$(`
+									<tr>
+								    		<td><input type="checkbox" value="`+item.id+`"</td>
+								    		<td>`+item.name+`</td>
+								    		<td>`+item.contactName+`</td>
+								    		<td>`+item.contactPhone+`</td>
+								    		<td>`+item.industry+`</td>
+								    		<td>`+item.location+`</td>
+								    		<td>`+item.scale+`</td>
+								    		<td>`+item.status+`</td>
+								    		<td>
+								    			<a class="showit" href="javascript:void(0)">查看</a>
+								    		</td>
+								    		<td>
+								    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+								    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+								    		</td>
+								    	</tr>
+							`);
+							$("tbody").append(newTr);
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		});
+		// 给two选中时加载数据
+		$("#two").change(function(event){
+			$("tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var  scale= mySelect.options[index].text; 
+          //获取选中文本，即option标签对之间的文字
+            var url=baseurl+"/Business/findByScale";
+
+            var data={
+            	scale:scale
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						result.data.forEach(function(item,index){
+							var newTr=$(`
+									<tr>
+								    		<td><input type="checkbox" value="`+item.id+`"</td>
+								    		<td>`+item.name+`</td>
+								    		<td>`+item.contactName+`</td>
+								    		<td>`+item.contactPhone+`</td>
+								    		<td>`+item.industry+`</td>
+								    		<td>`+item.location+`</td>
+								    		<td>`+item.scale+`</td>
+								    		<td>`+item.status+`</td>
+								    		<td>
+								    			<a class="showit" href="javascript:void(0)">查看</a>
+								    		</td>
+								    		<td>
+								    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+								    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+								    		</td>
+								    	</tr>
+							`);
+							$("tbody").append(newTr);
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		});
+		// 给three选中时加载数据
+		$("#three").change(function(event){
+			$("tbody").empty();
+			// 获取选中的option
+			var mySelect=event.target;   //定位id（获取select）
+            var index = mySelect.selectedIndex;  //选中索引（选取select中option选中的第几个）
+            var industry = mySelect.options[index].text; //获取选中文本，即option标签对之间的文字
+            var url=baseurl+"/Business/findByIndustry";
+            var data={
+            	industry:industry
+            }
+            $.get(url,data,function(result){
+            	if(result.status === 200){
+						// 更新页面
+						result.data.forEach(function(item,index){
+							var newTr=$(`
+									<tr>
+								    		<td><input type="checkbox" value="`+item.id+`"</td>
+								    		<td>`+item.name+`</td>
+								    		<td>`+item.contactName+`</td>
+								    		<td>`+item.contactPhone+`</td>
+								    		<td>`+item.industry+`</td>
+								    		<td>`+item.location+`</td>
+								    		<td>`+item.scale+`</td>
+								    		<td>`+item.status+`</td>
+								    		<td>
+								    			<a class="showit" href="javascript:void(0)">查看</a>
+								    		</td>
+								    		<td>
+								    			<a class="btn_del" href="javascript:void(0)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+								    			<a class="btn_edit" href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+								    		</td>
+								    	</tr>
+							`);
+							$("tbody").append(newTr);
+						})
+					} else {
+						alert(result.message);
+					}
+            })
+		});
+		//当点击操作按钮时
+		$("tbody").on("click","a",function(event){
+			switch(this.className){
+				// 删除操作
+				case"btn_del":
+				var url=baseurl+"/Business/deleteById";
+				// 获取当前行的id
+				var id = $(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				}
+				$.post(url,data,function(result){
+					if(result.status === 200){
+						// 更新页面
+						reView();
+					} else {
+						alert(result.message);
+					}
+				})
+				break;
+				// 修改操作
+				case"btn_edit":
+				// 模态框显示
+				$("#x_modal").modal("show");
+				// 获取当前行的id等数据，放到模态框
+				var id=$(this).parents("tr").children().eq(0).find("input").val();
+				var data={
+					id:id
+				}
+				$.get(baseurl+"/Business/findById",data,function(result){
+
+					$("#x_modal").find("input")[0].value=result.data.id;
+					$("#x_modal").find("input")[1].value=result.data.status;
+					$("#x_modal").find("input")[2].value=result.data.contactName;
+					$("#x_modal").find("input")[3].value=result.data.contactPhone;
+					$("#x_modal").find("input")[4].value=result.data.name;
+					$("#x_modal").find("input")[5].value=result.data.industry;
+					$("#x_modal").find("input")[6].value=result.data.location;
+					$("#x_modal").find("input")[7].value=result.data.scale;
+					$("#x_modal").find("input")[8].value=result.data.establishedTime;
+					$("#x_modal").find("input")[9].value=result.data.registeredCapital;
+					$("#x_modal").find("input")[10].value=result.data.businessLicense;
+					$("#x_modal").find("input")[11].value=result.data.description;
+
+				})
+				break;
+				case"showit":
+				$("#y_modal").modal("show");
+				break;
+			}			
+		})
+})
+	
+	
+</script>
